@@ -1,12 +1,12 @@
 Get the Similarity word using the Wikipedia Entity Vector
 ====
 
-
-
+This tool is avable to get the similliar word using by the wikification and wikipedia entity vector
 
 ## Description
 
-http://qiita.com/GushiSnow/private/d7c5a09b38d3ca650abd
+If you would like to read the japanese description, you read the below link
+    http://qiita.com/GushiSnow/private/d7c5a09b38d3ca650abd
 
 #
 ### Install
@@ -32,23 +32,22 @@ pyenv local 3.5.0
 ```
 
 ```
-pip install -r requirement.txt
+pip install -r pip3.5-requirement.txt
 ```
 
 ####Prepare the Data
 
-### How to prepare the for dialogue Data
+#### About Wikificatation
 
-#### About Wikipedia Data
+[Wikificatation is the proper noun data](http://www.cl.ecei.tohoku.ac.jp/jawikify/)
 
+#### About Wikipedia Vector
+
+[Japanese WikiPedia Entity Vector](http://www.cl.ecei.tohoku.ac.jp/%7Em-suzuki/jawiki_vector/)
 
 #### About the Data
 
-
-####Prepare enviroment.yml
-
-
-Installing a library bellow
+We collect the twitter data
 
 ##Requirements
 
@@ -56,14 +55,22 @@ Installing a library bellow
 ```
     Python 3.5.0
 	Mecab and neolog-dict
+	Cython==0.24
+    PyYAML==3.11
+    future==0.15.2
+    mecab-python3==0.7
+    mojimoji==0.0.5
+    neologdn==0.2
+    scipy==0.17.0
 ```
-
-####Confirm library
-
 
 #
 ### Usage
 #
+
+```
+python test/test_make_similarity_word.py
+```
 
 #
 ### Code Directory Structure
@@ -105,4 +112,5 @@ THE SOFTWARE.
 [SnowMasaya](https://github.com/SnowMasaya)
 ### References
 #
->[日本語 Wikipedia Entity ベクトル](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/)
+>[Japanese Wikipedia Entity Vector](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/)
+>[Japanese Wikification](http://www.cl.ecei.tohoku.ac.jp/jawikify/)
