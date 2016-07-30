@@ -55,7 +55,6 @@ if __name__ == '__main__':
     # extract Proper noum int he twitter data
     get_similarity_word = GetSimillairWord(twitter_list, ann_list, wiki_vector)
     get_similarity_word.get_proper_noun_word()
-    get_similarity_word.get_simillair_word()
     twitter_proper_noun_list = get_similarity_word.twitter_proper_noun_list
 
     # start multi thread

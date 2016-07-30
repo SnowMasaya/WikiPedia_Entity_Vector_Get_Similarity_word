@@ -22,7 +22,7 @@ class GetSimillairWord():
             http://www.cl.ecei.tohoku.ac.jp/%7Em-suzuki/jawiki_vector/
     """
 
-    def __init__(self, data_list, proper_noun_list, wiki_vector={}):
+    def __init__(self, data_list, proper_noun_list, wiki_vector={}, twitter_proper_noun_wiki_vector_dict={}):
         """
         Setting the initial paramater
         :param data_list(list): setting the analysis data
@@ -37,7 +37,7 @@ class GetSimillairWord():
              self.mecab_wakati = e["mecab_wakati"]
         self.tagger = MeCab.Tagger(self.mecab_wakati)
         self.twitter_proper_noun_list = []
-        self.twitter_proper_noun_wiki_vector_dict = {}
+        self.twitter_proper_noun_wiki_vector_dict = twitter_proper_noun_wiki_vector_dict
         self.COSIN_SIMILARITY_LIMIT = 0.7
 
     def __normalize(self, contents):
@@ -85,13 +85,14 @@ class GetSimillairWord():
                 if wiki_word != word:
                     cosine_similarity = self.__cosine_similarity(self.wiki_vector[word], vector)
                     self.__out_similair_word(cosine_similarity, word, wiki_word, wiki_word_list)
+        return self.twitter_proper_noun_wiki_vector_dict
 
     def __out_similair_word(self, cosine_similarity, word, wiki_word, wiki_word_list):
         if self.__cosine_similarity_judge(cosine_similarity):
-            print(word)
-            print(wiki_word)
-            print(self.twitter_proper_noun_wiki_vector_dict)
-            print("--------------------------------")
+            #print(word)
+            #print(wiki_word)
+            #print(self.twitter_proper_noun_wiki_vector_dict)
+            #print("--------------------------------")
             if word in self.twitter_proper_noun_wiki_vector_dict and word != wiki_word:
                 wiki_word_list = self.twitter_proper_noun_wiki_vector_dict[word]
                 wiki_word_list.append(wiki_word)

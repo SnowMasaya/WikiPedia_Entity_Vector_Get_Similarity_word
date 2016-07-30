@@ -43,6 +43,7 @@ class ProducerConsumerThread(object):
         self.data_list = data_list
         self.proper_noun_list = proper_noun_list
         self.wiki_vector = wiki_vector
+        self.twitter_proper_noun_wiki_vector_dict = {}
 
     def producer_run(self, proper_noum_list):
         """
@@ -80,8 +81,9 @@ class ProducerConsumerThread(object):
             else:
                 log_text = "Consume " + str(noum)
                 print(log_text)
-                get_similarity_word_module = GetSimillairWord(self.data_list, self.proper_noun_list, self.wiki_vector)
-                get_similarity_word_module.calc_similiarity_word(noum)
+                get_similarity_word_module = GetSimillairWord(self.data_list, self.proper_noun_list, self.wiki_vector, self.twitter_proper_noun_wiki_vector_dict)
+                self.twitter_proper_noun_wiki_vector_dict = get_similarity_word_module.calc_similiarity_word(noum)
+                print(self.twitter_proper_noun_wiki_vector_dict)
                 queue.task_done()
                 # Setting the wait time, I refered to the bellow link
                 #  https://www.w3.org/Protocols/HTTP-NG/http-prob.html
