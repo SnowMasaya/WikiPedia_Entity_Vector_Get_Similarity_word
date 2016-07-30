@@ -76,23 +76,29 @@ class GetSimillairWord():
         """
         get the simillair word
         """
-        for word in self.twitter_proper_noun_list:
-            if word in self.wiki_vector:
-                wiki_word_list = []
-                for wiki_word, vector in self.wiki_vector.items():
+        [self.calc_similiarity_word(word) for word in self.twitter_proper_noun_list]
+
+    def calc_similiarity_word(self, word):
+        if word in self.wiki_vector:
+            wiki_word_list = []
+            for wiki_word, vector in self.wiki_vector.items():
+                if wiki_word != word:
                     cosine_similarity = self.__cosine_similarity(self.wiki_vector[word], vector)
-                    if self.__cosine_similarity_judge(cosine_similarity):
-                        print(word)
-                        print(wiki_word)
-                        print(self.twitter_proper_noun_wiki_vector_dict)
-                        print("--------------------------------")
-                        if word in self.twitter_proper_noun_wiki_vector_dict and word != wiki_word:
-                            wiki_word_list = self.twitter_proper_noun_wiki_vector_dict[word]
-                            wiki_word_list.append(wiki_word)
-                            self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
-                        else:
-                            wiki_word_list.append(wiki_word)
-                            self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
+                    self.__out_similair_word(cosine_similarity, word, wiki_word, wiki_word_list)
+
+    def __out_similair_word(self, cosine_similarity, word, wiki_word, wiki_word_list):
+        if self.__cosine_similarity_judge(cosine_similarity):
+            print(word)
+            print(wiki_word)
+            print(self.twitter_proper_noun_wiki_vector_dict)
+            print("--------------------------------")
+            if word in self.twitter_proper_noun_wiki_vector_dict and word != wiki_word:
+                wiki_word_list = self.twitter_proper_noun_wiki_vector_dict[word]
+                wiki_word_list.append(wiki_word)
+                self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
+            elif word != wiki_word:
+                wiki_word_list.append(wiki_word)
+                self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
 
     def __cosine_similarity_judge(self, cosine_similarity):
         """
