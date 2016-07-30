@@ -1,0 +1,7 @@
+Cython==0.24
+PyYAML==3.11
+future==0.15.2
+mecab-python3==0.7
+mojimoji==0.0.5
+neologdn==0.2
+scipy==0.17.0
