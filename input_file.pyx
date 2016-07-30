@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import csv
+from gensim.models import word2vec
 csv.field_size_limit(1760000000)
 
 class InputFile():
@@ -52,6 +53,13 @@ class InputFile():
                 word_vector = list(map(float, word_vector))
                 if word not in self.__word_vector:
                     self.__word_vector.update({word: word_vector})
+
+    def input_word2vec_binary_file(self):
+        model = word2vec.Word2Vec.load_word2vec_format(self.__file_name, binary=True, encoding='utf-8', unicode_errors='ignore')
+        for word, vector in model.vocab.items():
+            replace_word = word.replace(">>", "").replace("<<", "")
+            if word not in self.__word_vector:
+                self.__word_vector.update({replace_word: vector})
 
     def input_list(self, file_dir):
         """

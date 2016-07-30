@@ -32,21 +32,9 @@ class Test_MakeSimilarityWord(unittest.TestCase):
         """
         make similarity word
         """
-        wiki_vector_file_name = APP_ROOT + '/../data/jawiki_vector_delete_first_utf8.txt'
+        wiki_vector_file_name = APP_ROOT + '/../data/jawiki_vector.bin'
         self.input_module = InputFile(wiki_vector_file_name)
-        self.input_module.input_fast_large_file()
-        wiki_vector = self.input_module.get_vector()
-        self.input_module = InputFile(self.input_ann_list)
-        self.input_module.input_list(self.input_dir)
-        self.ann_list = self.input_module.get_ann_list()
-        self.input_module = InputFile(self.input_twitter_data)
-        self.input_module.input_special_format_file()
-        self.twitter_list = self.input_module.get_file_data()
-        self.get_similarity_word = GetSimillairWord(self.twitter_list, self.ann_list, wiki_vector)
-        self.get_similarity_word.get_proper_noun_word()
-        self.get_similarity_word.get_simillair_word()
-        print(self.get_similarity_word.twitter_proper_noun_list)
-        print(self.get_similarity_word.twitter_proper_noun_wiki_vector_dict)
+        self.input_module.input_word2vec_binary_file()
 
 if __name__ == '__main__':
     unittest.main()

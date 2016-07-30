@@ -6,8 +6,8 @@ import re
 import mojimoji
 import neologdn
 import MeCab
-from scipy import linalg, mat, dot
-
+from scipy import linalg,mat, dot
+import scipy.linalg.blas as FB
 APP_ROOT = path.dirname( path.abspath("__file__") )
 
 CONFIG_FILE=APP_ROOT + "/conf/conf.yml"
@@ -37,7 +37,7 @@ class GetSimillairWord():
              self.mecab_wakati = e["mecab_wakati"]
         self.tagger = MeCab.Tagger(self.mecab_wakati)
         self.twitter_proper_noun_list = []
-        self.twitter_proper_noun_wiki_vector_list = []
+        self.twitter_proper_noun_wiki_vector_dict = {}
         self.COSIN_SIMILARITY_LIMIT = 0.7
 
     def __normalize(self, contents):
@@ -78,10 +78,21 @@ class GetSimillairWord():
         """
         for word in self.twitter_proper_noun_list:
             if word in self.wiki_vector:
+                wiki_word_list = []
                 for wiki_word, vector in self.wiki_vector.items():
                     cosine_similarity = self.__cosine_similarity(self.wiki_vector[word], vector)
-                    if cosine_similarity:
-                        self.twitter_proper_noun_wiki_vector_list.append(wiki_word)
+                    if self.__cosine_similarity_judge(cosine_similarity):
+                        print(word)
+                        print(wiki_word)
+                        print(self.twitter_proper_noun_wiki_vector_dict)
+                        print("--------------------------------")
+                        if word in self.twitter_proper_noun_wiki_vector_dict and word != wiki_word:
+                            wiki_word_list = self.twitter_proper_noun_wiki_vector_dict[word]
+                            wiki_word_list.append(wiki_word)
+                            self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
+                        else:
+                            wiki_word_list.append(wiki_word)
+                            self.twitter_proper_noun_wiki_vector_dict.update({word:wiki_word_list})
 
     def __cosine_similarity_judge(self, cosine_similarity):
         """
@@ -103,6 +114,32 @@ class GetSimillairWord():
         cosine_vector1 = mat(vector1)
         cosine_vector2 = mat(vector2)
         try:
-            return dot(cosine_vector1, cosine_vector2.T) / linalg.norm(cosine_vector1) / linalg.norm(cosine_vector2)
+            return self.__faster_dot(cosine_vector1, cosine_vector2.T) / linalg.norm(cosine_vector1) / linalg.norm(cosine_vector2)
         except ZeroDivisionError:
             return 0
+
+    def __faster_dot(self, A, B):
+        """
+        Use blas libraries directory to perform dot product
+        Reference:
+            https://www.huyng.com/posts/faster-numpy-dot-product
+            http://stackoverflow.com/questions/9478791/is-there-an-enhanced-numpy-scipy-dot-method
+        :param A(mat): vector
+        :param B(mat): vector
+        :return:
+        """
+        A, trans_a = self.__force_forder(A)
+        B, trans_b = self.__force_forder(B)
+
+        return FB.dgemm(alpha=1.0, a=A, b=B, trans_a=trans_a, trans_b=trans_b)
+
+    def __force_forder(self, x):
+        """
+        Converts array x to fortran order Returns a tuple in the form (x is transposed)
+        :param x(vector):
+        :return:
+        """
+        if x.flags.c_contiguous:
+            return (x.T, True)
+        else:
+            return (x, False)
