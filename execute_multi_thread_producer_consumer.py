@@ -22,7 +22,7 @@ if __name__ == '__main__':
     args
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--consumer_size', '-c', default=100,
+    parser.add_argument('--consumer_size', '-c', default=30,
                         help='set consumer size')
     parser.add_argument('--wiki_vector', '-wv', default=APP_ROOT + '/data/jawiki_vector_delete_first_utf8.txt',
                         help='set wiki_vector')

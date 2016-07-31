@@ -91,7 +91,7 @@ class GetSimillairWord():
         if self.__cosine_similarity_judge(cosine_similarity):
             #print(word)
             #print(wiki_word)
-            #print(self.twitter_proper_noun_wiki_vector_dict)
+            print(self.twitter_proper_noun_wiki_vector_dict)
             #print("--------------------------------")
             if word in self.twitter_proper_noun_wiki_vector_dict and word != wiki_word:
                 wiki_word_list = self.twitter_proper_noun_wiki_vector_dict[word]

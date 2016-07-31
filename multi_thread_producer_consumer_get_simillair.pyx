@@ -79,10 +79,10 @@ class ProducerConsumerThread(object):
                 print("Queue Empty")
                 pass
             else:
-                log_text = "Consume " + str(noum)
-                print(log_text)
                 get_similarity_word_module = GetSimillairWord(self.data_list, self.proper_noun_list, self.wiki_vector, self.twitter_proper_noun_wiki_vector_dict)
                 self.twitter_proper_noun_wiki_vector_dict = get_similarity_word_module.calc_similiarity_word(noum)
+                log_text = "Consume " + str(noum)
+                print(log_text)
                 print(self.twitter_proper_noun_wiki_vector_dict)
                 queue.task_done()
                 # Setting the wait time, I refered to the bellow link
