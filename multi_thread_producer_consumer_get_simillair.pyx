@@ -18,7 +18,8 @@ Reference:
     http://ja.pymotw.com/2/Queue/
 """
 SEED_DOMAIN_LIST_SIZE = 192
-queue = queue.Queue(SEED_DOMAIN_LIST_SIZE)
+word_queue = queue.Queue(SEED_DOMAIN_LIST_SIZE)
+check_queue = queue.Queue(SEED_DOMAIN_LIST_SIZE)
 APP_ROOT = os.path.dirname(os.path.abspath("__file__"))
 
 
@@ -50,19 +51,22 @@ class ProducerConsumerThread(object):
         Running Producer
         Setting seed domain into the Queue
         """
-        global queue
+        global word_queue
+        global check_queue
         while True:
             if proper_noum_list:
-                noun = random.choice(proper_noum_list)
-                try:
-                    queue.put(noun)
-                except queue.Full:
-                    print("Queue Full")
-                    pass
-                else:
-                    log_text = "Produced " + str(noun)
-                    print(log_text)
-                    time.sleep(random.uniform(0.0, 0.5))
+                noum = proper_noum_list.pop()
+                if noum not in check_queue.queue:
+                    try:
+                        log_text = "Produced " + str(noum)
+                        print(log_text)
+                        word_queue.put(noum)
+                        check_queue.put(noum)
+                    except word_queue.Full:
+                        print("Queue Full")
+                        pass
+                    else:
+                        time.sleep(random.uniform(0.0, 0.5))
             else:
                 print("No noum " + str(proper_noum_list))
 
@@ -71,11 +75,11 @@ class ProducerConsumerThread(object):
         Running Consumer
         Taking the seed domain
         """
-        global queue
+        global word_queue
         while True:
             try:
-                noum = queue.get()
-            except queue.Empty:
+                noum = word_queue.get()
+            except word_queue.Empty:
                 print("Queue Empty")
                 pass
             else:
@@ -84,7 +88,7 @@ class ProducerConsumerThread(object):
                 log_text = "Consume " + str(noum)
                 print(log_text)
                 print(self.twitter_proper_noun_wiki_vector_dict)
-                queue.task_done()
+                word_queue.task_done()
                 # Setting the wait time, I refered to the bellow link
                 #  https://www.w3.org/Protocols/HTTP-NG/http-prob.html
                 time.sleep(random.uniform(0.601, 0.602))
