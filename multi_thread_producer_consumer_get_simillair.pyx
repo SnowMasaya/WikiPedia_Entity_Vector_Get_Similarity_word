@@ -69,6 +69,7 @@ class ProducerConsumerThread(object):
                         time.sleep(random.uniform(0.0, 0.5))
             else:
                 print("No noum " + str(proper_noum_list))
+                break
 
     def consumer_run(self):
         """
